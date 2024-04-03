@@ -10,3 +10,5 @@ elif opcao == 2:
     print(f'{num} convertido para OCTAL é igual a {oct(num)}')
 elif opcao == 3:
     print(f'{num} convertido para HEXADECIMAL ')
+    print()
+    
