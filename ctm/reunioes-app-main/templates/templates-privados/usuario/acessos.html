@@ -1,0 +1,57 @@
+{% extends 'templates-privados/base_priv.html' %}
+
+{% block content %}
+<h1 data-aos="fade-down">Acessos ao sistema</h1>
+<div class="uk-container">
+    <!-- Paginação dos dados -->
+    <div class="uk-margin-top">
+        {{ pagination.info }}
+        <ul class="uk-pagination uk-flex-center">
+            {% if pagination.has_prev %}
+                <li><a href="{{ url_for('usuario.acessos', page=pagination.prev_num) }}"><span uk-pagination-previous></span></a></li>
+            {% else %}
+                <li class="uk-disabled"><span uk-pagination-previous></span></li>
+            {% endif %}
+    
+            {% for page_num in pagination.pages %}
+                {% if page_num %}
+                    {% if page_num == pagination.page %}
+                        <li class="uk-active"><span>{{ page_num }}</span></li>
+                    {% else %}
+                        <li><a href="{{ url_for('usuario.acessos', page=page_num) }}">{{ page_num }}</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="uk-disabled"><span>...</span></li>
+                {% endif %}
+            {% endfor %}
+    
+            {% if pagination.has_next %}
+                <li><a href="{{ url_for('usuario.acessos', page=pagination.next_num) }}"><span uk-pagination-next></span></a></li>
+            {% else %}
+                <li class="uk-disabled"><span uk-pagination-next></span></li>
+            {% endif %}
+        </ul>
+    </div>
+    
+
+    <table class="uk-table uk-table-hover uk-table-divider">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Usuario</th>
+                <th>Acesso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in context.logs_acesso %}
+            <tr>
+                <td>{{ log.id_log }}</td>
+                <td>{{ log.usuario.username }}</td>
+                <td>{{ log.acesso.strftime("%d/%m/%Y %H:%M:%S") }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

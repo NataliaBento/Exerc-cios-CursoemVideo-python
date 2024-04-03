@@ -1,0 +1,251 @@
+{% extends 'templates-privados/base_priv.html' %}
+
+{% block content %}
+<h1 data-aos="fade-down">Administração</h1>
+<div class="uk-child-width-1-2@m uk-grid-small uk-grid-match uk-margin" uk-grid>
+    <!-- Usuários -->
+    <div>
+        <div class="uk-margin" data-aos="fade-right">
+            <h3>Usuários</h3>
+            <div class="uk-margin">
+                <button class="uk-button uk-button-primary" uk-toggle="target: #modalAddUsuario" type="button">Novo usuário</button>
+            </div>
+            <table class="uk-table uk-table-middle uk-table-divider">
+                <thead>
+                    <tr>
+                        <th class="uk-width-small">Usuario</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-usuarios">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Salas -->
+    <div>
+        <div class="uk-margin" data-aos="fade-left">
+            <h3>Salas</h3>
+            <div class="uk-margin">
+                <button class="uk-button uk-button-primary" uk-toggle="target: #modalAddSala" type="button">Nova sala</button>
+            </div>
+            <table class="uk-table uk-table-middle uk-table-divider">
+                <thead>
+                    <tr>
+                        <th class="uk-width-small">#</th>
+                        <th>Sala</th>
+                        <th>Tipo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-salas">
+                    <!-- Preenchido via AJAX -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal AddUsuario -->
+<div id="modalAddUsuario" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Novo usuário</h2>
+        </div>
+        <div class="uk-modal-body">
+            <form class="uk-form-stacked">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="input-username">Username</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="input-username" type="text" placeholder="Digite..." required maxlength="50">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="input-email">Email</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="input-email" type="email" placeholder="Digite..." required maxlength="50">
+                    </div>
+                </div>
+            
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="slct-input-setor">Setor</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id="slct-input-setor" required>
+                            <option selected>Selecione..</option>
+                            {% for setor in context.setores %}
+                                <option value="{{ setor.id }}">{{ setor.setor }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="slct-input-nivel-acesso">Nível de acesso</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id="slct-input-nivel-acesso">
+                            <option value="agendador" selected>Agendador</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+            
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="input-password">Senha</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="input-password" type="text" placeholder="Digite..." required maxlength="30">
+                    </div>
+                </div>
+
+            
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+            <button class="uk-button uk-button-primary" type="button" onclick="addUsuario();">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal visaoUsuario -->
+<div id="modalVerUsuario" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Usuário</h2>
+            <div class="uk-alert-warning" uk-alert>
+                <a href class="uk-alert-close" uk-close></a>
+                <h3>Atenção</h3>
+                <p>Edição de usuario só será disponível se informar a senha atual, ou nova senha para, o usuário em questão.</p>
+            </div>
+        </div>
+        <div class="uk-modal-body">
+            <form class="uk-form-stacked">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="input-username-visao">Username</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="input-username-visao" type="text" placeholder="Digite..." required maxlength="50">
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="input-email-visao">Email</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="input-email-visao" type="email" placeholder="Digite..." required maxlength="50">
+                    </div>
+                </div>
+            
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="slct-input-setor-visao">Setor</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id="slct-input-setor-visao" required>
+                            <option selected>Selecione..</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="slct-input-nivel-acesso-visao">Nível de acesso</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id="slct-input-nivel-acesso-visao">
+                            <option value="agendador" selected>Agendador</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </div>
+            
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="password-visao">Senha</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="password-visao" type="text" placeholder="Digite..." required maxlength="30">
+                    </div>
+                </div>
+
+            
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+            <button class="uk-button uk-button-primary" type="button" id="btnUpdtUsuario">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal AddSala -->
+<div id="modalAddSala" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Nova Sala</h2>
+        </div>
+        <div class="uk-modal-body">
+            <form class="uk-form-stacked">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="input-sala">Nome da sala</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="input-sala" type="text" placeholder="Digite..." required maxlength="50">
+                    </div>
+                </div>
+
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="slct-input-tipo">Tipo de sala</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id="slct-input-tipo">
+                            <option value="0" selected>Normal</option>
+                            <option value="1">Expressa</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+            <button class="uk-button uk-button-primary" type="button" onclick="addSala();">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal VerSala -->
+<div id="modalVerSala" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Sala</h2>
+        </div>
+        <div class="uk-modal-body">
+            <form class="uk-form-stacked">
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="input-sala-visao">Nome da sala</label>
+                    <div class="uk-form-controls">
+                        <input class="uk-input" id="input-sala-visao" type="text" placeholder="Digite..." required maxlength="50">
+                    </div>
+                </div>
+
+
+                <div class="uk-margin">
+                    <label class="uk-form-label" for="slct-input-tipo-visao">Tipo de sala</label>
+                    <div class="uk-form-controls">
+                        <select class="uk-select" id="slct-input-tipo-visao">
+                            <option value="0" selected>Normal</option>
+                            <option value="1">Expressa</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Cancelar</button>
+            <button class="uk-button uk-button-primary" type="button" id="btnUpdtSala">Salvar</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'templates-privados/base_priv.html' %}
+
+{% block content %}
+<h1 data-aos="fade-left">Olá, {{context.user}}!</h1>
+<h2 data-aos="fade-rights">Salas de reunião</h2>
+<div class="uk-alert-warning" uk-alert>
+  <a href class="uk-alert-close" uk-close></a>
+  <h3>Legenda das salas!</h3>
+  <p>Salas normais são salas você pode reservar o tempo que precisar marcando os slots de reunião, elas tem esse ícone: <span class="material-symbols-outlined">timer</span></p>
+  <p>As salas expressas são salas que podem ter reserva de no máximo 10 minutos elas tem esse ícone: <span class="material-symbols-outlined">bolt</span></p>
+</div>
+<div class="uk-child-width-expand@s uk-margin" uk-grid data-aos="fade-up">
+  {% for sala in context.salas %}
+  <a href="{{url_for('agenda.agenda_sala', id=sala.id)}}">
+    <div>
+      <div class="uk-card uk-card-default uk-card-body uk-card-hover" data-aos="fade-down">
+        <h2 style="font-weight: 600;">{{sala.sala}} - {% if sala.tipo == 0 %} 
+          Normal 
+          <span class="material-symbols-outlined">
+            timer
+          </span> 
+          {% else %} 
+          Expressa 
+          <span class="material-symbols-outlined">
+            bolt
+            </span>
+          {% endif %}
+        </h2>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+<h2 data-aos="fade-left">Próximas reuniões</h2>
+<div class="uk-child-width-1-4@m uk-grid-small uk-grid-match uk-margin" data-aos="fade-up" uk-grid>
+  {% for reuniao in context.reunioes %}
+  <div>
+    <div class="uk-card uk-card-default uk-card-hover" data-aos="fade-up">
+      <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+          <div class="uk-width-expand">
+            <h3 class="uk-card-title uk-margin-remove-bottom">{{ reuniao.data.strftime("%d/%m/%Y") }}</h3>
+            <p class="uk-text-meta uk-margin-remove-top">Código de agendamento: #{{reuniao.id}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="uk-card-body">
+        <p>Sala reservada: <b>{{ reuniao.sala.sala }}</b></p>
+        <p>De <b>{{ reuniao.hora_inicio }}</b></p>
+        <p>até as <b>{{ reuniao.hora_fim }}</b></p>
+      </div>
+      <div class="uk-card-footer">
+        <button class="uk-button uk-button-default uk-button-small" onclick="confirmarCancelamento({{ reuniao.id }})">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
