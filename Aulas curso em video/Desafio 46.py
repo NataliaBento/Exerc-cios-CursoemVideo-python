@@ -1,6 +1,6 @@
 from time import sleep
 
-for cont in range (10, 0+1, -1):
-    print(cont)
+for c in range (10, 0, -1):
+    print(c)
     sleep(1)
-print('FELIZ ANO NOVO!')
+print("FELIZ ANO NOVO")
