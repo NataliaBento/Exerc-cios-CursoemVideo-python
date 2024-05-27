@@ -9,9 +9,3 @@ for c in range (1, 7):
         contPar = contPar + 1
 print(f"Você digitou {c} números, no total de {contPar} números pares e a soma dos valores par é {soma}")
 
-
-    
-
-
-
-
