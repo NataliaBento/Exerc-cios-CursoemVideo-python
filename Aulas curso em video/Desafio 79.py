@@ -14,3 +14,7 @@ numero.sort()
 print('='*30)
 print(f'Você digitou os valoes: {numero}')
 
+
+
+
+
