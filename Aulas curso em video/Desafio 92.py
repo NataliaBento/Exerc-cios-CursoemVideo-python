@@ -9,6 +9,6 @@ if dados['CTPS'] != 0:
     dados['Contratação'] = int(input('Ano de contratação: '))
     dados['salário'] = float(input('Salário: R$ '))
     dados['aposentadoria'] = dados ['idade'] +(dados['Contratação'] + 35) - (datetime.now().year)
-print('-=' * 30) 
+print('-=' * 40) 
 for k, v in dados.items():
-    print(f'   - {k} = {v}')
+    print(f'  - {k} = {v}')
